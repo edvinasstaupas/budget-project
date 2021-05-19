@@ -42,24 +42,4 @@ public abstract class Record {
     public int getIndex() {
         return index;
     }
-
-   /* @Override
-    public String toString() {
-        return "Sum = " + df.format(sum) +
-                "\tcategory index = " + categoryIndex +
-                "\tdate = " + dateTimeFormatter.format(date);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Record)) return false;
-        Record record = (Record) o;
-        return Double.compare(record.getSum(), getSum()) == 0 && categoryIndex == record.categoryIndex && date.equals(record.date) && Objects.equals(additionalInfo, record.additionalInfo);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getSum(), categoryIndex, date, additionalInfo);
-    }*/
 }
