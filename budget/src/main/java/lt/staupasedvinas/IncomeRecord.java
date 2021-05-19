@@ -6,21 +6,20 @@ public class IncomeRecord extends Record {
 
     boolean isMoneyInBankAccount;
 
-    public IncomeRecord(double sum, int categoryIndex, LocalDateTime date, boolean isMoneyInBankAccount, String additionalInfo) {
-        super(sum, categoryIndex, date);
+    public IncomeRecord(double sum, int categoryIndex, LocalDateTime date, boolean isMoneyInBankAccount, String additionalInfo, int index) {
+        super(sum, categoryIndex, date, index, additionalInfo);
         this.isMoneyInBankAccount = isMoneyInBankAccount;
-        this.additionalInfo = additionalInfo;
     }
 
+    public boolean getIsMoneyInBankAccount() {
+        return isMoneyInBankAccount;
+    }
 
-    @Override
+    /*@Override
     public String toString() {
-        String string = "Sum = " + df.format(sum) +
-                "\tcategory index = " + categoryIndex +
-                "\tdate = " + dateTimeFormatter.format(date) +
-                "\tis money in bank account = " + isMoneyInBankAccount;
+        String string = super.toString() + "\tis money in bank account = " + isMoneyInBankAccount;
         if (additionalInfo.length() > 0)
             string += "\tadditional info = \"" + additionalInfo + "\".";
         return string;
-    }
+    }*/
 }

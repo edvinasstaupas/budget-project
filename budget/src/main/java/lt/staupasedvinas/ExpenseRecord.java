@@ -6,21 +6,20 @@ public class ExpenseRecord extends Record {
 
     int cardNumber;
 
-    public ExpenseRecord(double sum, int categoryIndex, LocalDateTime date, int cardNumber, String additionalInfo) {
-        super(sum, categoryIndex, date);
+    public ExpenseRecord(double sum, int categoryIndex, LocalDateTime date, int cardNumber, String additionalInfo, int index) {
+        super(sum, categoryIndex, date, index, additionalInfo);
         this.cardNumber = cardNumber;
-        this.additionalInfo = additionalInfo;
     }
 
+    public int getCardNumber() {
+        return cardNumber;
+    }
 
-    @Override
+   /* @Override
     public String toString() {
-        String string = "Sum = " + df.format(sum) +
-                "\tcategory index = " + categoryIndex +
-                "\tdate = " + dateTimeFormatter.format(date) +
-                "\tcard number = " + cardNumber;
+        String string = super.toString() + "\tcard number = " + cardNumber;
         if (additionalInfo.length() > 0)
             string += "\tadditional info = \"" + additionalInfo + "\".";
         return string;
-    }
+    }*/
 }
