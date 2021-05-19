@@ -14,12 +14,4 @@ public class ExpenseRecord extends Record {
     public int getCardNumber() {
         return cardNumber;
     }
-
-   /* @Override
-    public String toString() {
-        String string = super.toString() + "\tcard number = " + cardNumber;
-        if (additionalInfo.length() > 0)
-            string += "\tadditional info = \"" + additionalInfo + "\".";
-        return string;
-    }*/
 }
