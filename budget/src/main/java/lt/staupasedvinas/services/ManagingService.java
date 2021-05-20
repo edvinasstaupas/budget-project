@@ -1,17 +1,25 @@
-package lt.staupasedvinas;
+package lt.staupasedvinas.services;
 
+import lt.staupasedvinas.Budget;
+import lt.staupasedvinas.records.ExpenseRecord;
+import lt.staupasedvinas.records.IncomeRecord;
+
+import java.text.DecimalFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
 import static java.lang.System.exit;
-import static java.lang.System.in;
-import static lt.staupasedvinas.printLn.*;
+import static lt.staupasedvinas.services.printService.*;
 
-public class ServiceManager {
+public class ManagingService {
+
+    static DecimalFormat df = new DecimalFormat("#.##");
+    static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     private final Budget budget;
 
-
-    public ServiceManager(Budget budget) {
+    public ManagingService(Budget budget) {
         this.budget = budget;
         init();
     }
@@ -89,7 +97,7 @@ public class ServiceManager {
     }
 
     public void printBalance() {
-        println("Total balance: " + Record.df.format(budget.balance()));
+        println("Total balance: " + df.format(budget.balance()));
         println("");
     }
 
@@ -99,21 +107,21 @@ public class ServiceManager {
         for (IncomeRecord incomeRecord : incomeRecords) {
             println(String.format("Index = %-5dsum = %-5s category index = %-5d date = %s is money in bank account = %-5b additional info = %s",
 
-                    incomeRecord.getIndex(), Record.df.format(incomeRecord.getSum()),
-                    incomeRecord.getCategoryIndex(), Record.dateTimeFormatter.format(incomeRecord.getDate()),
+                    incomeRecord.getIndex(), df.format(incomeRecord.getSum()),
+                    incomeRecord.getCategoryIndex(), dateTimeFormatter.format(incomeRecord.getDate()),
                     incomeRecord.getIsMoneyInBankAccount(), incomeRecord.getAdditionalInfo()));
         }
         println("-------------------------------------------------------------------------------------------------------------------\nExpenses:");
         List<ExpenseRecord> expenseRecords = budget.getExpenseRecords();
         for (ExpenseRecord expenseRecord : expenseRecords) {
             println(String.format("Index = %-5d sum = %-5s category index = %-5d date = %s card number = %-8d additional info = %s",
-                    expenseRecord.getIndex(), Record.df.format(expenseRecord.getSum()),
-                    expenseRecord.getCategoryIndex(), Record.dateTimeFormatter.format(expenseRecord.getDate()),
+                    expenseRecord.getIndex(), df.format(expenseRecord.getSum()),
+                    expenseRecord.getCategoryIndex(), dateTimeFormatter.format(expenseRecord.getDate()),
                     expenseRecord.getCardNumber(), expenseRecord.getAdditionalInfo()));
         }
         println("-------------------------------------------------------------------------------------------------------------------");
-        println("Total incomes: " + Record.df.format(budget.getListBalance(budget.getIncomeRecords())));
-        println("Total expenses: " + Record.df.format(budget.getListBalance(budget.getExpenseRecords())));
+        println("Total incomes: " + df.format(budget.getListBalance(budget.getIncomeRecords())));
+        println("Total expenses: " + df.format(budget.getListBalance(budget.getExpenseRecords())));
         printBalance();
         println("");
     }

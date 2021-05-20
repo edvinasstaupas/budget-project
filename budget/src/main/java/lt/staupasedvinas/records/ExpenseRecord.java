@@ -1,4 +1,4 @@
-package lt.staupasedvinas;
+package lt.staupasedvinas.records;
 
 import java.time.LocalDateTime;
 
