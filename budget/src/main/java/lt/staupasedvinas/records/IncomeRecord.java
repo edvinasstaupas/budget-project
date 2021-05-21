@@ -14,4 +14,11 @@ public class IncomeRecord extends Record {
     public boolean getIsMoneyInBankAccount() {
         return isMoneyInBankAccount;
     }
+
+    @Override
+    public String toString() {
+        return "IncomeRecord{" +
+                "isMoneyInBankAccount=" + isMoneyInBankAccount +
+                '}';
+    }
 }

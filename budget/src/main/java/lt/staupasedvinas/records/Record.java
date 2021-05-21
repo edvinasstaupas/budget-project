@@ -1,15 +1,30 @@
 package lt.staupasedvinas.records;
 
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public abstract class Record {
 
     private final int index;
-    private final double sum;
-    private final int categoryIndex;
-    private final LocalDateTime date;
+    private double sum;
+    private int categoryIndex;
+
+    public void setSum(double sum) {
+        this.sum = sum;
+    }
+
+    public void setCategoryIndex(int categoryIndex) {
+        this.categoryIndex = categoryIndex;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
+    }
+
+    private LocalDateTime date;
     private String additionalInfo;
 
     public Record(double sum, int categoryIndex, LocalDateTime date, int index, String additionalInfo) {
@@ -38,5 +53,17 @@ public abstract class Record {
 
     public int getIndex() {
         return index;
+    }
+
+    //TODO toString method both here and in child classes
+    @Override
+    public String toString() {
+        return "Record{" +
+                "index=" + index +
+                ", sum=" + sum +
+                ", categoryIndex=" + categoryIndex +
+                ", date=" + date +
+                ", additionalInfo='" + additionalInfo + '\'' +
+                '}';
     }
 }

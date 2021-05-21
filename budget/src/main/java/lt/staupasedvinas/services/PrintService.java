@@ -2,7 +2,7 @@ package lt.staupasedvinas.services;
 
 import java.util.Scanner;
 
-public class printService {
+public class PrintService {
     public static Scanner scanner = new Scanner(System.in);
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_RESET = "\u001B[0m";

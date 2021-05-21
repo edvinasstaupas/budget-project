@@ -3,18 +3,19 @@ package lt.staupasedvinas.services;
 import lt.staupasedvinas.Budget;
 import lt.staupasedvinas.records.ExpenseRecord;
 import lt.staupasedvinas.records.IncomeRecord;
+import lt.staupasedvinas.records.Record;
+import lt.staupasedvinas.records.RecordFactory;
 
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Locale;
 
 import static java.lang.System.exit;
-import static lt.staupasedvinas.services.printService.*;
+import static lt.staupasedvinas.services.PrintService.*;
 
 public class ManagingService {
 
-    static DecimalFormat df = new DecimalFormat("#.##");
+    static DecimalFormat decimalFormat = new DecimalFormat("#.##");
     static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final Budget budget;
@@ -31,6 +32,7 @@ public class ManagingService {
                     "3 print budget\n" +
                     "4 print balance\n" +
                     "5 delete a record\n" +
+                    "6 edit a record\n" +
                     "0 exit the program\n";
             println(commands);
             switch (scanner.next()) {
@@ -49,84 +51,104 @@ public class ManagingService {
                 case "5":
                     deleteRecord();
                     break;
+                case "6":
+                    editRecord();
+                    break;
                 case "0":
                     exit(0);
-                    break;
                 default:
-                    println("Bad input.");
+                    printlnErr("Bad input.");
                     break;
             }
         }
     }
 
-    private void deleteRecord() {
-        boolean go = false;
-        boolean removed;
-        println("Do you want to delete income or expense record. Write i or r:");
-        String string = "";
-        while (!go) {
-            string = scanner.next();
-            if (string.equals("i")) {
-                go = true;
-            } else if (string.equals("r")) {
-                go = true;
-            } else {
-                printlnErr("Bad input! Enter valid choice of record.");
-            }
+    private void editRecord() {
+        printRecords();
+        int index = getIndex();
+        println("Would you like to edit this record's sum? yes/no");
+        switch (scanner.next()) {
+            case "yes":
+                budget.getRecord(index).setSum(getSum());
+                break;
+            case "no":
+                println("Okay, moving on...");
+                break;
+            default:
+                printlnErr("Bad input");
         }
+        //TODO use this code for other variables
+    }
 
+    private int getIndex() {
         println("Enter what index you want to delete:");
         int index = scanner.nextInt();
-
-        if (string.equals("i")) {
-            removed = removeIncomeRecord(index);
-        } else {
-            removed = removeExpenseRecord(index);
+        while (index > budget.getIndexCounter())
+        {
+            printlnErr("Bad input, index is too big. Bigest index can be " +  (budget.getIndexCounter() - 1));
+            index = scanner.nextInt();
         }
+        return index;
+    }
+
+    private void deleteRecord() {
+        boolean removed;
+
+        removed = removeRecord(getIndex());
+
         if (!removed) {
             printlnErr("Something gone wrong, your request was not fulfilled. It is likely that you entered wrong index, check that and try again");
         }
     }
 
+    private boolean removeRecord(int index) {
+        return budget.removeRecord(index);
+    }
+
+    @Deprecated
     public boolean removeIncomeRecord(int index) {
         return budget.removeIncomeRecord(index);
     }
 
+    @Deprecated
     public boolean removeExpenseRecord(int index) {
         return budget.removeExpenseRecord(index);
     }
 
-    public void printBalance() {
-        println("Total balance: " + df.format(budget.balance()));
+    private void printBalance() {
+        println("Total balance: " + decimalFormat.format(budget.balance()));
         println("");
     }
 
-    public void printBudget() {
-        println("Incomes:");
-        List<IncomeRecord> incomeRecords = budget.getIncomeRecords();
-        for (IncomeRecord incomeRecord : incomeRecords) {
-            println(String.format("Index = %-5dsum = %-5s category index = %-5d date = %s is money in bank account = %-5b additional info = %s",
-
-                    incomeRecord.getIndex(), df.format(incomeRecord.getSum()),
-                    incomeRecord.getCategoryIndex(), dateTimeFormatter.format(incomeRecord.getDate()),
-                    incomeRecord.getIsMoneyInBankAccount(), incomeRecord.getAdditionalInfo()));
-        }
-        println("-------------------------------------------------------------------------------------------------------------------\nExpenses:");
-        List<ExpenseRecord> expenseRecords = budget.getExpenseRecords();
-        for (ExpenseRecord expenseRecord : expenseRecords) {
-            println(String.format("Index = %-5d sum = %-5s category index = %-5d date = %s card number = %-8d additional info = %s",
-                    expenseRecord.getIndex(), df.format(expenseRecord.getSum()),
-                    expenseRecord.getCategoryIndex(), dateTimeFormatter.format(expenseRecord.getDate()),
-                    expenseRecord.getCardNumber(), expenseRecord.getAdditionalInfo()));
-        }
-        println("-------------------------------------------------------------------------------------------------------------------");
-        println("Total incomes: " + df.format(budget.getListBalance(budget.getIncomeRecords())));
-        println("Total expenses: " + df.format(budget.getListBalance(budget.getExpenseRecords())));
+    private void printBudget() {
+        printRecords();
+        println("------------------------------------------------------" +
+                "-------------------------------------------------------------");
+        println("Total incomes: " + decimalFormat.format(
+                budget.getListBalance(budget.getRecords(), BudgetForms.INCOME)));
+        println("Total expenses: " + decimalFormat.format(
+                budget.getListBalance(budget.getRecords(), BudgetForms.EXPENSE)));
         printBalance();
         println("");
     }
 
-    public void addExpense() {
+    private void printRecords() {
+        println("Incomes:");
+        for (Record record : budget.getRecords()) {
+            if (record instanceof IncomeRecord) {
+                println(record.toString());
+            }
+        }
+        println("------------------------------------------------------" +
+                "-------------------------------------------------------------\nExpenses:");
+        for (Record record : budget.getRecords()) {
+            if (record instanceof ExpenseRecord) {
+                println(record.toString());
+            }
+        }
+    }
+
+    private void addExpense() {
         double sum = getSum();
         println("Enter category index:");
         int index = scanner.nextInt();
@@ -136,10 +158,11 @@ public class ManagingService {
         scanner.nextLine(); //needed to skip \n character
         String info = scanner.nextLine();
         println(info);
-        budget.addExpenseRecord(sum, index, cardNumber, info);
+        budget.addRecord(new RecordFactory().newExpenseRecord(sum, index, cardNumber, info, budget));
+        //budget.addExpenseRecord(sum, index, cardNumber, info);
     }
 
-    public void addIncome() {
+    private void addIncome() {
         double sum = getSum();
         println("Enter category index:");
         int index = scanner.nextInt();
@@ -160,7 +183,8 @@ public class ManagingService {
         println("Enter additional info (if you want to leave it blank, press enter):");
         scanner.nextLine(); //needed to skip \n character
         String info = scanner.nextLine();
-        budget.addIncomeRecord(sum, index, moneyIsIn, info);
+        budget.addRecord(new RecordFactory().newIncomeRecord(sum, index, moneyIsIn, info, budget));
+        //budget.addIncomeRecord(sum, index, moneyIsIn, info);
     }
 
     private double getSum() {
