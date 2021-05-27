@@ -1,10 +1,11 @@
 package lt.staupasedvinas;
 
-import lt.staupasedvinas.services.ManagingService;
+import lt.staupasedvinas.domain.Budget;
+import lt.staupasedvinas.services.managingservice.ManagingServiceImpl;
 
 public class Main {
 
     public static void main(String[] args) {
-        new ManagingService(new Budget());
+        new ManagingServiceImpl(new Budget());
     }
 }

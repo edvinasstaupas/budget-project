@@ -1,6 +1,6 @@
-package lt.staupasedvinas.records;
+package lt.staupasedvinas.domain.records;
 
-import lt.staupasedvinas.Budget;
+import lt.staupasedvinas.domain.Budget;
 
 import java.time.LocalDateTime;
 
