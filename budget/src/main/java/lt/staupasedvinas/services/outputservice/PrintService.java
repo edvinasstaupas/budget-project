@@ -4,4 +4,6 @@ public interface PrintService {
     void println(String string);
 
     void printlnErr(String string);
+
+    void printlnBadInput();
 }

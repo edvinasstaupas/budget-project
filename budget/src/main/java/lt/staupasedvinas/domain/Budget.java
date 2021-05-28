@@ -12,7 +12,7 @@ public class Budget {
 
     private int indexCounter;
 
-    private final List<Record> records;
+    private List<Record> records;
 
     public Budget() {
         indexCounter = 0;
@@ -86,5 +86,13 @@ public class Budget {
 
     public Record getRecord(int index) {
         return findRecordWithIndex(index);
+    }
+
+    public void setRecords(List<Record> records) {
+        this.records = records;
+    }
+
+    public void setIndex(int maxIndex) {
+        indexCounter = maxIndex;
     }
 }

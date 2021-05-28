@@ -5,12 +5,16 @@ import lt.staupasedvinas.domain.records.ExpenseRecord;
 import lt.staupasedvinas.domain.records.IncomeRecord;
 import lt.staupasedvinas.domain.records.Record;
 import lt.staupasedvinas.domain.records.RecordFactory;
+import lt.staupasedvinas.repository.RecordsFileReader;
+import lt.staupasedvinas.repository.RecordsFileWriter;
 import lt.staupasedvinas.services.inputservice.InputService;
 import lt.staupasedvinas.services.inputservice.InputServiceImpl;
 import lt.staupasedvinas.services.outputservice.PrintService;
 import lt.staupasedvinas.services.outputservice.PrintServiceImpl;
 
+import java.io.File;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static java.lang.System.exit;
 import static lt.staupasedvinas.services.outputservice.PrintServiceImpl.*;
@@ -18,12 +22,13 @@ import static lt.staupasedvinas.services.outputservice.PrintServiceImpl.*;
 public class ManagingServiceImpl implements InputService, ManagingService, PrintService {
 
     private final Budget budget;
-
     private final InputServiceImpl inputService;
+    private final PrintServiceImpl printService;
 
     public ManagingServiceImpl(Budget budget) {
         this.budget = budget;
         inputService = new InputServiceImpl(this.budget);
+        printService = new PrintServiceImpl();
         init();
     }
 
@@ -35,6 +40,8 @@ public class ManagingServiceImpl implements InputService, ManagingService, Print
                     "4 print balance\n" +
                     "5 delete a record\n" +
                     "6 edit a record\n" +
+                    "7 save data to file\n" +
+                    "8 get data from file\n" +
                     "0 exit the program\n";
             println(commands);
             switch (scanner.next()) {
@@ -55,6 +62,12 @@ public class ManagingServiceImpl implements InputService, ManagingService, Print
                     break;
                 case "6":
                     editRecord();
+                    break;
+                case "7":
+                    writeToFile();
+                    break;
+                case "8":
+                    readFromFile();
                     break;
                 case "0":
                     exit(0);
@@ -201,6 +214,26 @@ public class ManagingServiceImpl implements InputService, ManagingService, Print
     }
 
     @Override
+    public void writeToFile() {
+        new RecordsFileWriter(getFile()).write(budget.getRecords());
+    }
+
+    @Override
+    public void readFromFile() {
+        RecordsFileReader reader = new RecordsFileReader(getFile());
+        List<Record> records = reader.read();
+        if (!(records == null)) {
+            println("Read file data:");
+            for (Record record : records) {
+                println(record.toString());
+            }
+            budget.setRecords(records);
+            budget.setIndex(reader.getMaxIndex() + 1);
+            println("New records were set");
+        }
+    }
+
+    @Override
     public void addIncome() {
         budget.addRecord(new RecordFactory().newIncomeRecord(getSum(), getIndexInput(), getMoneyIsIn(), getInfo(), budget));
     }
@@ -213,6 +246,11 @@ public class ManagingServiceImpl implements InputService, ManagingService, Print
     @Override
     public int getIndex() {
         return inputService.getIndex();
+    }
+
+    @Override
+    public File getFile() {
+        return inputService.getFile();
     }
 
     @Override
@@ -242,11 +280,16 @@ public class ManagingServiceImpl implements InputService, ManagingService, Print
 
     @Override
     public void println(String string) {
-        System.out.println(string);
+        printService.println(string);
     }
 
     @Override
     public void printlnErr(String string) {
-        System.out.println(PrintServiceImpl.ANSI_RED + string + PrintServiceImpl.ANSI_RESET);
+        printService.printlnErr(string);
+    }
+
+    @Override
+    public void printlnBadInput() {
+        printService.printlnBadInput();
     }
 }

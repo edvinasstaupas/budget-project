@@ -24,5 +24,9 @@ public class IncomeRecord extends Record {
         return super.toString() + String.format(" is money in bank account = %-5s additional info = %s", isMoneyInBankAccount, getAdditionalInfo());
     }
 
+    @Override
+    public String toCSVFormat() {
+        return "I," + super.toCSVFormat()  + "," +  isMoneyInBankAccount  + "," + getAdditionalInfo() + "\n";
+    }
 
 }

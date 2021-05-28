@@ -51,6 +51,9 @@ public abstract class Record {
     }
 
     public String getAdditionalInfo() {
+        if (additionalInfo.equals("")) {
+            return " ";
+        }
         return additionalInfo;
     }
 
@@ -75,5 +78,9 @@ public abstract class Record {
     @Override
     public int hashCode() {
         return Objects.hash(getIndex());
+    }
+
+    public String toCSVFormat() {
+        return index + "," + sum + "," + categoryIndex  + "," + PrintServiceImpl.dateTimeFormat.format(date);
     }
 }

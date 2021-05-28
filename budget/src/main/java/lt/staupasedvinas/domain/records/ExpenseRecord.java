@@ -23,4 +23,9 @@ public class ExpenseRecord extends Record {
     public String toString() {
         return super.toString() + String.format(" card number = %-18d additional info = %s", cardNumber, getAdditionalInfo());
     }
+
+    @Override
+    public String toCSVFormat() {
+        return "E," + super.toCSVFormat()  + "," +  cardNumber  + "," + getAdditionalInfo() + "\n";
+    }
 }

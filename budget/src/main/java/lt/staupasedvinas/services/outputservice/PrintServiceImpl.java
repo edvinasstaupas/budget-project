@@ -12,7 +12,6 @@ public class PrintServiceImpl implements PrintService {
     public static DecimalFormat decimalFormat = new DecimalFormat("#.##");
     public static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-
     @Override
     public void println(String string) {
         System.out.println(string);
@@ -21,5 +20,10 @@ public class PrintServiceImpl implements PrintService {
     @Override
     public void printlnErr(String string) {
         System.out.println(PrintServiceImpl.ANSI_RED + string + PrintServiceImpl.ANSI_RESET);
+    }
+
+    @Override
+    public void printlnBadInput() {
+        printlnErr("Bad input. Try again.");
     }
 }

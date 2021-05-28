@@ -15,5 +15,10 @@ public interface ManagingService {
 
     void addExpense();
 
+    void writeToFile();
+
+    void readFromFile();
+
     void addIncome();
+
 }
