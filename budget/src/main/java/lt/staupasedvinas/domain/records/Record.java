@@ -1,6 +1,9 @@
-package lt.staupasedvinas.records;
+package lt.staupasedvinas.domain.records;
+
+import lt.staupasedvinas.services.outputservice.PrintServiceImpl;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public abstract class Record {
 
@@ -48,6 +51,9 @@ public abstract class Record {
     }
 
     public String getAdditionalInfo() {
+        if (additionalInfo.equals("")) {
+            return " ";
+        }
         return additionalInfo;
     }
 
@@ -55,15 +61,26 @@ public abstract class Record {
         return index;
     }
 
-    //TODO toString method both here and in child classes
     @Override
     public String toString() {
-        return "Record{" +
-                "index=" + index +
-                ", sum=" + sum +
-                ", categoryIndex=" + categoryIndex +
-                ", date=" + date +
-                ", additionalInfo='" + additionalInfo + '\'' +
-                '}';
+        return String.format("index = %-4d sum = %-6s category index = %-4d date = %-14s", index,
+                PrintServiceImpl.decimalFormat.format(sum), categoryIndex, PrintServiceImpl.dateTimeFormat.format(date));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Record)) return false;
+        Record record = (Record) o;
+        return getIndex() == record.getIndex();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIndex());
+    }
+
+    public String toCSVFormat() {
+        return index + "," + sum + "," + categoryIndex  + "," + PrintServiceImpl.dateTimeFormat.format(date);
     }
 }

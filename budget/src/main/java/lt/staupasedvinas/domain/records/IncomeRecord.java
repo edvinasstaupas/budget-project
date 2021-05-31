@@ -1,4 +1,4 @@
-package lt.staupasedvinas.records;
+package lt.staupasedvinas.domain.records;
 
 import java.time.LocalDateTime;
 
@@ -11,14 +11,22 @@ public class IncomeRecord extends Record {
         this.isMoneyInBankAccount = isMoneyInBankAccount;
     }
 
+    public void setMoneyInBankAccount(boolean moneyInBankAccount) {
+        isMoneyInBankAccount = moneyInBankAccount;
+    }
+
     public boolean getIsMoneyInBankAccount() {
         return isMoneyInBankAccount;
     }
 
     @Override
     public String toString() {
-        return "IncomeRecord{" +
-                "isMoneyInBankAccount=" + isMoneyInBankAccount +
-                '}';
+        return super.toString() + String.format(" is money in bank account = %-5s additional info = %s", isMoneyInBankAccount, getAdditionalInfo());
     }
+
+    @Override
+    public String toCSVFormat() {
+        return "I," + super.toCSVFormat()  + "," +  isMoneyInBankAccount  + "," + getAdditionalInfo() + "\n";
+    }
+
 }
